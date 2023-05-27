@@ -16,6 +16,6 @@ public class Main {
             monthCount++;
         }
 
-        System.out.println("Χρειάζονται περίπου " + monthCount + " μήνες και " + (monthCount / 12) + " χρόνια για να φτάσετε στον στόχο σας.");
+        System.out.println("Χρειάζονται περίπου " + monthCount + " μήνες ή " + (monthCount / 12) + " χρόνια για να φτάσετε στον στόχο σας.");
     }
 }
