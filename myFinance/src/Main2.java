@@ -1,8 +1,8 @@
 public class Main2 {
     public static void main(String[] args) {
-        double initialBalance = 20000.0; // initial balance
+        double initialBalance = 10000.0; // initial balance
         double deposit = 200.0; // monthly deposit
-        double annualRate = 0.10; // annual interest rate
+        double annualRate = 0.5; // annual interest rate
         double target = 240000.0; // target balance
 
         int monthCount = 0;
