@@ -1,26 +1,27 @@
 public class Main2 {
     public static void main(String[] args) {
-        double initialBalance = 10000.0; // initial balance
-        double deposit = 200.0; // monthly deposit
-        double annualRate = 0.5; // annual interest rate
-        double target = 240000.0; // target balance
+        // Αρχικές τιμές
+        double initialInvestment = 10000.0;
+        double monthlyDeposit = 200.0;
+        double annualInterest = 0.05; // 5% ετήσια επιτόκια
+        double targetAmount = 240000.0;
+        int monthsPerYear = 12;
 
-        int monthCount = 0;
+        int years = 0;
 
-        while (initialBalance < target) {
-            // Add monthly deposit
-            initialBalance += deposit;
-            
-            monthCount++;
+        while (initialInvestment < targetAmount) {
+            // Προσθέτουμε το ετήσιο επιτόκιο
+            initialInvestment += initialInvestment * annualInterest;
 
-            // Apply annual interest at the end of each year
-            if (monthCount % 12 == 0) {
-                initialBalance += initialBalance * annualRate;
+            // Προσθέτουμε την μηνιαία κατάθεση για κάθε μήνα του χρόνου
+            for (int month = 0; month < monthsPerYear; month++) {
+                initialInvestment += monthlyDeposit;
             }
+
+            years++; // Περνάει ένας χρόνος
         }
 
-        int yearsRequired = monthCount / 12;
-
-        System.out.println("Χρειάζονται περίπου " + yearsRequired + " χρόνια για να φτάσετε στον στόχο σας.");
+        System.out.println("Θα χρειαστείτε " + years + " χρόνια για να φτάσετε στα " + targetAmount + " ευρώ.");
     }
+
 }

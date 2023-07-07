@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, this.title}) : super(key: key);
-  final String? title;
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -36,12 +36,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _result = '';
 
-  void _calculateSavings() {
+  Future<void> _calculateSavings() async {
     double initialBalance = double.parse(_initialBalanceController.text);
     double deposit = double.parse(_monthlyDepositController.text);
     double annualRate = double.parse(_annualRateController.text);
     double target = double.parse(_targetController.text);
 
+    List<String> annualProgress = [];
     int monthCount = 0;
 
     while (initialBalance < target) {
@@ -52,10 +53,37 @@ class _MyHomePageState extends State<MyHomePage> {
       // Apply annual interest at the end of each year
       if (monthCount % 12 == 0) {
         initialBalance += initialBalance * annualRate;
+        annualProgress.add(
+            'Έτος ${monthCount ~/ 12}: \$${initialBalance.toStringAsFixed(2)}');
       }
     }
 
-    int yearsRequired = (monthCount / 12).floor();
+    int yearsRequired = monthCount ~/ 12;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Yearly Progress'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: annualProgress
+                  .map((yearlyProgress) => Text(yearlyProgress))
+                  .toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Continue'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
 
     setState(() {
       _result =
@@ -67,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: Text(widget.title),
       ),
       body: Form(
         key: _formKey,
