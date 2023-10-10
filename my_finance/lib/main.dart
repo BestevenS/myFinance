@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _initialBalanceController = TextEditingController();
   final _monthlyDepositController = TextEditingController();
   final _annualRateController = TextEditingController();
+  final _rateAfter100KController = TextEditingController(); // Νέος controller
   final _targetController = TextEditingController();
 
   String _result = '';
@@ -40,6 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
     double initialBalance = double.parse(_initialBalanceController.text);
     double deposit = double.parse(_monthlyDepositController.text);
     double annualRate = double.parse(_annualRateController.text);
+    double rateAfter100K =
+        double.parse(_rateAfter100KController.text); // Νέα μεταβλητή
     double target = double.parse(_targetController.text);
 
     List<String> annualProgress = [];
@@ -52,7 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // Apply annual interest at the end of each year
       if (monthCount % 12 == 0) {
-        initialBalance += initialBalance * annualRate;
+        if (initialBalance > 100000) {
+          // Έλεγχος για το όριο των 100,000
+          initialBalance += initialBalance * rateAfter100K;
+        } else {
+          initialBalance += initialBalance * annualRate;
+        }
         annualProgress.add(
             'Έτος ${monthCount ~/ 12}: \$${initialBalance.toStringAsFixed(2)}');
       }
@@ -62,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     await showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Yearly Progress'),
@@ -120,6 +128,13 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: _annualRateController,
               decoration: const InputDecoration(
                 labelText: 'Annual Rate',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            TextFormField(
+              controller: _rateAfter100KController,
+              decoration: const InputDecoration(
+                labelText: 'Rate after 100K',
               ),
               keyboardType: TextInputType.number,
             ),
